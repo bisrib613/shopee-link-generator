@@ -57,10 +57,41 @@
   </div>
 
   <script>
+    const DEFAULT_AFFILIATE_ID = '11304530178';
+    const DEFAULT_SUB_ID = 'kuntyy-social';
+
+    function getAffiliateId(value) {
+      const requested = String(value ?? '').trim();
+      return requested || DEFAULT_AFFILIATE_ID;
+    }
+
+    function getSubId(value) {
+      const candidate = String(value || DEFAULT_SUB_ID).trim();
+      if (!candidate) return DEFAULT_SUB_ID;
+      return candidate.replace(/[^a-zA-Z0-9._-]/g, '-').slice(0, 100) || DEFAULT_SUB_ID;
+    }
+
+    function cleanOriginUrl(url) {
+      return String(url).split('?')[0];
+    }
+
+    function buildAffiliateLink(originUrl, affiliateId, subId) {
+      return `https://s.shopee.co.id/an_redir?origin_link=${encodeURIComponent(originUrl)}&affiliate_id=${encodeURIComponent(affiliateId)}&sub_id=${encodeURIComponent(subId)}`;
+    }
+
+    function isShopeeShortLink(url) {
+      try {
+        const parsed = new URL(url);
+        return parsed.hostname.toLowerCase() === 's.shopee.co.id';
+      } catch {
+        return false;
+      }
+    }
+
     async function generateLink() {
       const input = document.getElementById('inputLink').value.trim();
-      const affiliateId = document.getElementById('affiliateId').value.trim();
-      const subId = document.getElementById('subId').value.trim();
+      const affiliateId = getAffiliateId(document.getElementById('affiliateId').value);
+      const subId = getSubId(document.getElementById('subId').value);
       const resultArea = document.getElementById('resultLink');
       const copyStatus = document.getElementById('copyStatus');
       const generateButton = document.getElementById('generateButton');
@@ -75,23 +106,40 @@
       generateButton.innerHTML = '<span class="loader"></span> Processing...';
 
       try {
-        const response = await fetch('/api', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            url: input,
-            affiliate_id: affiliateId,
-            sub_id: subId
-          })
-        });
+        if (isShopeeShortLink(input)) {
+          const response = await fetch('/api', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              url: input,
+              affiliate_id: affiliateId,
+              sub_id: subId
+            })
+          });
 
-        const data = await response.json();
+          const data = await response.json();
 
-        if (!response.ok || !data.success) {
-          throw new Error(data.error || 'Failed to generate affiliate link.');
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || 'Failed to generate affiliate link.');
+          }
+
+          resultArea.value = data.affiliateLink;
+        } else {
+          const parsed = new URL(input);
+          const hostname = parsed.hostname.toLowerCase();
+
+          if (!['shopee.co.id'].includes(hostname)) {
+            throw new Error('Only Shopee Indonesia product URLs are supported.');
+          }
+
+          const originUrl = cleanOriginUrl(parsed.toString());
+          resultArea.value = buildAffiliateLink(
+            originUrl,
+            affiliateId,
+            subId
+          );
         }
 
-        resultArea.value = data.affiliateLink;
         copyStatus.textContent = '';
       } catch (err) {
         console.error(err);
