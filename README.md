@@ -16,9 +16,15 @@ A lightweight Shopee affiliate link generator with a public API. The default aff
 
 ## Web
 
+Live web app:
+
+https://shopee-affiliate-link-generator.netlify.app/
+
 Paste a Shopee product URL or short link into the web interface and click **Generate Link**.
 
-The web interface uses affiliate ID **11304530178** by default.
+Full Shopee product URLs are generated directly in the browser for an instant result. Shopee short links (`s.shopee.co.id`) are resolved through the API first.
+
+The web interface uses affiliate ID **11304530178** and Sub ID **kuntyy-social** by default.
 
 ## Public API
 
@@ -55,7 +61,7 @@ The endpoint stays short. API parameters are sent in the request body as JSON.
 The shortest documented request:
 
 ```bash
-curl -X POST "https://YOUR-DOMAIN/api" \
+curl -X POST "https://shopee-affiliate-link-generator.netlify.app/api" \
   -H "Content-Type: application/json" \
   -d '{
     "url": "https://shopee.co.id/example-product"
@@ -67,7 +73,7 @@ Because `affiliate_id` is omitted, the API automatically uses **11304530178**.
 ### Custom affiliate ID
 
 ```bash
-curl -X POST "https://YOUR-DOMAIN/api" \
+curl -X POST "https://shopee-affiliate-link-generator.netlify.app/api" \
   -H "Content-Type: application/json" \
   -d '{
     "url": "https://shopee.co.id/example-product",
@@ -78,7 +84,7 @@ curl -X POST "https://YOUR-DOMAIN/api" \
 ### Empty affiliate ID
 
 ```bash
-curl -X POST "https://YOUR-DOMAIN/api" \
+curl -X POST "https://shopee-affiliate-link-generator.netlify.app/api" \
   -H "Content-Type: application/json" \
   -d '{
     "url": "https://shopee.co.id/example-product",
@@ -91,7 +97,7 @@ An empty value also falls back to **11304530178**.
 ### Custom sub ID
 
 ```bash
-curl -X POST "https://YOUR-DOMAIN/api" \
+curl -X POST "https://shopee-affiliate-link-generator.netlify.app/api" \
   -H "Content-Type: application/json" \
   -d '{
     "url": "https://shopee.co.id/example-product",
@@ -104,7 +110,7 @@ curl -X POST "https://YOUR-DOMAIN/api" \
 For clients that prefer form data, the API also accepts `application/x-www-form-urlencoded`:
 
 ```bash
-curl "https://YOUR-DOMAIN/api" \
+curl "https://shopee-affiliate-link-generator.netlify.app/api" \
   -d "url=https://shopee.co.id/example-product" \
   -d "affiliate_id=11304530178"
 ```
@@ -114,7 +120,7 @@ curl "https://YOUR-DOMAIN/api" \
 ### POST JSON
 
 ```js
-const response = await fetch("https://YOUR-DOMAIN/api", {
+const response = await fetch("https://shopee-affiliate-link-generator.netlify.app/api", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"
@@ -132,7 +138,7 @@ console.log(data.affiliateLink);
 Add optional parameters only when needed:
 
 ```js
-const response = await fetch("https://YOUR-DOMAIN/api", {
+const response = await fetch("https://shopee-affiliate-link-generator.netlify.app/api", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"
