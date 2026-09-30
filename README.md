@@ -36,7 +36,7 @@ The endpoint stays short. API parameters are sent in the request body as JSON.
 {
   "url": "https://shopee.co.id/example-product",
   "affiliate_id": "11304530178",
-  "sub_id": "kuntyy-link-generator"
+  "sub_id": "kuntyy-social"
 }
 ```
 
@@ -46,7 +46,7 @@ The endpoint stays short. API parameters are sent in the request body as JSON.
 | --- | --- | --- | --- |
 | `url` | Yes | — | Shopee product URL or `s.shopee.co.id` short link |
 | `affiliate_id` | No | `11304530178` | Affiliate ID. Omitted or empty uses the built-in default |
-| `sub_id` | No | `kuntyy-link-generator` | Optional tracking sub ID |
+| `sub_id` | No | `kuntyy-social` | Optional tracking sub ID |
 
 ## cURL
 
@@ -157,7 +157,7 @@ When `affiliate_id` is empty or omitted, the response uses **11304530178**.
   "affiliateLink": "https://s.shopee.co.id/an_redir?...",
   "originLink": "https://shopee.co.id/example-product",
   "affiliateId": "11304530178",
-  "subId": "kuntyy-link-generator"
+  "subId": "kuntyy-social"
 }
 ```
 
