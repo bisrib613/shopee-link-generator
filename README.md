@@ -54,6 +54,12 @@ The endpoint stays short. API parameters are sent in the request body as JSON.
 | `affiliate_id` | No | `11304530178` | Affiliate ID. Omitted or empty uses the built-in default |
 | `sub_id` | No | `kuntyy-social` | Optional tracking sub ID |
 
+### API Documentation
+
+Beginner-friendly API documentation:
+
+https://shopee-affiliate-link-generator.netlify.app/apidocs
+
 ## cURL
 
 ### Default affiliate ID
