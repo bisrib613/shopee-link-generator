@@ -31,19 +31,75 @@ GET /api/generate?url=<URL>
 
 `affiliate_id` is optional.
 
-- Omitted: uses **11304530178**.
-- Empty: uses **11304530178**.
-- Provided: uses the supplied affiliate ID.
+- **Omitted:** uses **11304530178**.
+- **Empty:** uses **11304530178**.
+- **Provided:** uses the supplied affiliate ID.
 
-Example:
+So these are all valid:
 
 ```
-GET /api/generate?url=<URL>&affiliate_id=11304530178
+/api/generate?url=<URL>
+/api/generate?url=<URL>&affiliate_id=
+/api/generate?url=<URL>&affiliate_id=123456789
 ```
 
-This also works when the API is called from code.
+The same fallback rule applies to GET and POST requests.
 
-Example with JavaScript:
+## cURL
+
+### 1. Omit affiliate ID — uses the default
+
+```bash
+curl "https://YOUR-DOMAIN/api/generate?url=https%3A%2F%2Fshopee.co.id%2Fexample-product"
+```
+
+This uses affiliate ID **11304530178**.
+
+### 2. Send an empty affiliate ID — uses the default
+
+```bash
+curl "https://YOUR-DOMAIN/api/generate?url=https%3A%2F%2Fshopee.co.id%2Fexample-product&affiliate_id="
+```
+
+This also uses affiliate ID **11304530178**.
+
+### 3. Send a custom affiliate ID
+
+```bash
+curl "https://YOUR-DOMAIN/api/generate?url=https%3A%2F%2Fshopee.co.id%2Fexample-product&affiliate_id=123456789"
+```
+
+This uses the supplied affiliate ID instead of the default.
+
+### 4. Send a custom sub_id
+
+```bash
+curl "https://YOUR-DOMAIN/api/generate?url=https%3A%2F%2Fshopee.co.id%2Fexample-product&sub_id=my-campaign"
+```
+
+If `sub_id` is omitted or empty, the API uses `kuntyy-link-generator`.
+
+### 5. Send affiliate ID and sub_id together
+
+```bash
+curl "https://YOUR-DOMAIN/api/generate?url=https%3A%2F%2Fshopee.co.id%2Fexample-product&affiliate_id=123456789&sub_id=my-campaign"
+```
+
+### 6. POST with JSON
+
+```bash
+curl -X POST "https://YOUR-DOMAIN/api/generate" \
+  -H "Content-Type: application/json" \
+  -d '{"url":"https://shopee.co.id/example-product","affiliate_id":"","sub_id":"my-campaign"}'
+```
+
+An empty `affiliate_id` in this request falls back to **11304530178**.
+
+No authentication header, API key, or cookie is required for these requests.
+
+## JavaScript
+
+Example with the default affiliate ID:
 
 ```js
 const productUrl = "https://shopee.co.id/example-product";
@@ -57,7 +113,7 @@ const data = await response.json();
 console.log(data.affiliateLink);
 ```
 
-To explicitly send an empty affiliate ID and use the default:
+Explicitly send an empty affiliate ID to use the default:
 
 ```js
 const params = new URLSearchParams({
@@ -65,19 +121,33 @@ const params = new URLSearchParams({
   affiliate_id: ""
 });
 
-const response = await fetch("https://YOUR-DOMAIN/api/generate?" + params);
+const response = await fetch(
+  "https://YOUR-DOMAIN/api/generate?" + params
+);
+
 const data = await response.json();
 
 console.log(data.affiliateId); // "11304530178"
 ```
 
-Example with cURL:
+Use a custom affiliate ID:
 
-```bash
-curl "https://YOUR-DOMAIN/api/generate?url=https%3A%2F%2Fshopee.co.id%2Fexample-product"
+```js
+const params = new URLSearchParams({
+  url: "https://shopee.co.id/example-product",
+  affiliate_id: "123456789"
+});
+
+const response = await fetch(
+  "https://YOUR-DOMAIN/api/generate?" + params
+);
+
+const data = await response.json();
+
+console.log(data.affiliateId); // "123456789"
 ```
 
-POST is also supported:
+### POST
 
 ```js
 const response = await fetch("https://YOUR-DOMAIN/api/generate", {
@@ -87,7 +157,8 @@ const response = await fetch("https://YOUR-DOMAIN/api/generate", {
   },
   body: JSON.stringify({
     url: "https://shopee.co.id/example-product",
-    affiliate_id: ""
+    affiliate_id: "",
+    sub_id: "my-campaign"
   })
 });
 
@@ -96,17 +167,7 @@ const data = await response.json();
 
 When `affiliate_id` is empty or omitted, the response uses **11304530178**.
 
-### Optional sub_id
-
-Pass a custom `sub_id` when needed:
-
-```
-GET /api/generate?url=<URL>&sub_id=my-campaign
-```
-
-Without a custom value, the API uses `kuntyy-link-generator`.
-
-### Response
+## Response
 
 ```json
 {
@@ -117,8 +178,6 @@ Without a custom value, the API uses `kuntyy-link-generator`.
   "subId": "kuntyy-link-generator"
 }
 ```
-
-No authentication header, API key, or session cookie is required.
 
 ## Link format
 
