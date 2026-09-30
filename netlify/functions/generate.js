@@ -20,7 +20,7 @@ exports.handler = async function handler(event) {
     return { statusCode: 204, headers: corsHeaders, body: "" };
   }
 
-  if (![ "GET", "POST" ].includes(event.httpMethod)) {
+  if (!["GET", "POST"].includes(event.httpMethod)) {
     return json(405, {
       success: false,
       error: "Method not allowed. Use GET or POST."
@@ -29,11 +29,13 @@ exports.handler = async function handler(event) {
 
   try {
     let input = event.queryStringParameters?.url || "";
+    let affiliateId = event.queryStringParameters?.affiliate_id || "";
     let subId = event.queryStringParameters?.sub_id || "";
 
     if (event.httpMethod === "POST" && event.body) {
       const payload = JSON.parse(event.body);
       input = payload.url || input;
+      affiliateId = payload.affiliate_id ?? affiliateId;
       subId = payload.sub_id || subId;
     }
 
@@ -44,7 +46,7 @@ exports.handler = async function handler(event) {
       });
     }
 
-    const result = await generateAffiliateLink(input, subId);
+    const result = await generateAffiliateLink(input, affiliateId, subId);
 
     return json(200, {
       success: true,
