@@ -9,7 +9,7 @@ module.exports = async function handler(req, res) {
     return res.status(204).end();
   }
 
-  if (![ "GET", "POST" ].includes(req.method)) {
+  if (!["GET", "POST"].includes(req.method)) {
     return res.status(405).json({
       success: false,
       error: "Method not allowed. Use GET or POST."
@@ -18,10 +18,12 @@ module.exports = async function handler(req, res) {
 
   try {
     let input = req.query?.url || "";
+    let affiliateId = req.query?.affiliate_id || "";
     let subId = req.query?.sub_id || "";
 
     if (req.method === "POST" && req.body) {
       input = req.body.url || input;
+      affiliateId = req.body.affiliate_id ?? affiliateId;
       subId = req.body.sub_id || subId;
     }
 
@@ -32,7 +34,7 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    const result = await generateAffiliateLink(input, subId);
+    const result = await generateAffiliateLink(input, affiliateId, subId);
 
     return res.status(200).json({
       success: true,
