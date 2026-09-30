@@ -20,7 +20,6 @@
     button.copy:hover { background-color: #666; }
     .small { font-size: 14px; color: #666; margin-top: 10px; text-align: center; }
     .note { background-color: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; margin-bottom: 20px; font-size: 14px; }
-    .affiliate-id { background: white; border: 1px solid #eee; border-radius: 5px; padding: 10px; color: #555; font-family: monospace; margin-bottom: 15px; }
     .loader { display: inline-block; width: 20px; height: 20px; margin-right: 8px; border: 3px solid rgba(255,255,255,.3); border-radius: 50%; border-top-color: white; animation: spin 1s ease-in-out infinite; vertical-align: middle; }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
@@ -34,8 +33,13 @@
   </div>
 
   <div class="input-field">
-    <label>Affiliate ID:</label>
-    <div class="affiliate-id">11304530178</div>
+    <label for="affiliateId">Affiliate ID:</label>
+    <input type="text" id="affiliateId" value="11304530178" autocomplete="off">
+  </div>
+
+  <div class="input-field">
+    <label for="subId">Sub ID:</label>
+    <input type="text" id="subId" value="kuntyy-link-generator" placeholder="Optional sub ID" autocomplete="off">
   </div>
 
   <div class="input-field">
@@ -55,6 +59,8 @@
   <script>
     async function generateLink() {
       const input = document.getElementById('inputLink').value.trim();
+      const affiliateId = document.getElementById('affiliateId').value.trim();
+      const subId = document.getElementById('subId').value.trim();
       const resultArea = document.getElementById('resultLink');
       const copyStatus = document.getElementById('copyStatus');
       const generateButton = document.getElementById('generateButton');
@@ -72,7 +78,11 @@
         const response = await fetch('/api', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: input })
+          body: JSON.stringify({
+            url: input,
+            affiliate_id: affiliateId,
+            sub_id: subId
+          })
         });
 
         const data = await response.json();
