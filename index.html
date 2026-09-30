@@ -5,120 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shopee Affiliate Link Generator</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 30px 20px;
-      background-color: #f9f9f9;
-    }
-    h2 {
-      color: #ee4d2d;
-      margin-bottom: 20px;
-      font-size: 24px;
-      text-align: center;
-    }
-    .input-field {
-      margin-bottom: 15px;
-    }
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      box-sizing: border-box;
-    }
-    button.generate {
-      padding: 12px;
-      font-size: 16px;
-      background-color: #ee4d2d;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 10px;
-    }
-    button.generate:hover {
-      background-color: #dd3c1a;
-    }
-    button.generate:disabled {
-      background-color: #f8aa9a;
-      cursor: not-allowed;
-    }
-    .result {
-      margin-top: 25px;
-    }
-    .result-label {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-    textarea {
-      width: 100%;
-      height: 80px;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 14px;
-      resize: none;
-    }
-    button.copy {
-      background-color: #777;
-      color: white;
-      border: none;
-      padding: 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 14px;
-      width: 100%;
-      margin-top: 10px;
-    }
-    button.copy:hover {
-      background-color: #666;
-    }
-    .small {
-      font-size: 14px;
-      color: #666;
-      margin-top: 10px;
-      text-align: center;
-    }
-    .note {
-      background-color: #fff3cd;
-      color: #856404;
-      padding: 10px;
-      border-radius: 5px;
-      margin-bottom: 20px;
-      font-size: 14px;
-    }
-    .affiliate-id {
-      background: white;
-      border: 1px solid #eee;
-      border-radius: 5px;
-      padding: 10px;
-      color: #555;
-      font-family: monospace;
-      margin-bottom: 15px;
-    }
-    .loader {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      margin-right: 8px;
-      border: 3px solid rgba(255,255,255,.3);
-      border-radius: 50%;
-      border-top-color: white;
-      animation: spin 1s ease-in-out infinite;
-      vertical-align: middle;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px 20px; background-color: #f9f9f9; }
+    h2 { color: #ee4d2d; margin-bottom: 20px; font-size: 24px; text-align: center; }
+    .input-field { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input { width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+    button.generate { padding: 12px; font-size: 16px; background-color: #ee4d2d; color: white; border: none; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 10px; }
+    button.generate:hover { background-color: #dd3c1a; }
+    button.generate:disabled { background-color: #f8aa9a; cursor: not-allowed; }
+    .result { margin-top: 25px; }
+    .result-label { font-weight: bold; margin-bottom: 5px; }
+    textarea { width: 100%; height: 80px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; resize: none; box-sizing: border-box; }
+    button.copy { background-color: #777; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-size: 14px; width: 100%; margin-top: 10px; }
+    button.copy:hover { background-color: #666; }
+    .small { font-size: 14px; color: #666; margin-top: 10px; text-align: center; }
+    .note { background-color: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; margin-bottom: 20px; font-size: 14px; }
+    .affiliate-id { background: white; border: 1px solid #eee; border-radius: 5px; padding: 10px; color: #555; font-family: monospace; margin-bottom: 15px; }
+    .loader { display: inline-block; width: 20px; height: 20px; margin-right: 8px; border: 3px solid rgba(255,255,255,.3); border-radius: 50%; border-top-color: white; animation: spin 1s ease-in-out infinite; vertical-align: middle; }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -136,12 +40,7 @@
 
   <div class="input-field">
     <label for="inputLink">Shopee Product Link:</label>
-    <input
-      type="text"
-      id="inputLink"
-      placeholder="Paste Shopee product link here"
-      autocomplete="off"
-    >
+    <input type="text" id="inputLink" placeholder="Paste Shopee product link here" autocomplete="off">
   </div>
 
   <button class="generate" id="generateButton" onclick="generateLink()">Generate Link</button>
@@ -170,7 +69,12 @@
       generateButton.innerHTML = '<span class="loader"></span> Processing...';
 
       try {
-        const response = await fetch('/api/generate?url=' + encodeURIComponent(input));
+        const response = await fetch('/api', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: input })
+        });
+
         const data = await response.json();
 
         if (!response.ok || !data.success) {
