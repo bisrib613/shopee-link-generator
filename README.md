@@ -1,26 +1,96 @@
 # Shopee Affiliate Link Generator
 
-A simple tool to help you generate Shopee affiliate links instantly by just pasting a product URL and entering your affiliate ID.
+A lightweight Shopee affiliate link generator with a public API. The default affiliate ID is **11304530178**.
 
-## 🌟 Why Use This?
+## Features
 
-Easily earn cashback with your friends—without constantly asking them for their affiliate links.
-This tool lets you generate your own Shopee affiliate links from any product URL, so you can support each other and still get rewards effortlessly.
+- Generate Shopee affiliate links from full product URLs.
+- Resolve \`s.shopee.co.id\` short links before generating the affiliate link.
+- Keep the original product URL query parameters intact.
+- Browser UI for manual use.
+- Public JSON API for scripts, apps, automation, and other code.
+- No API key or authentication required.
+- CORS enabled for cross-origin requests.
 
-## ✨ Features
+## Web
 
-- 🔗 Paste any Shopee product link
-- ⚡ Instantly generate your friend's affiliate version of the product link
-- 📋 One-click "Copy to Clipboard" button
+Paste a Shopee product URL or short link into the web interface and click **Generate Link**.
 
-## 🚀 How to Use
+## Public API
 
-1. Paste a Shopee product link into the input field.
-2. Enter the affiliate ID (e.g., `14382300002`).
-3. Click **Generate Link**.
-4. Click **Copy to Clipboard**, then open a new browser tab and paste the link to view the product with the affiliate tracking applied!
+The API endpoint is:
 
-## 📜 License
+\`\`\`
+GET /api/generate?url=<URL>
+\`\`\`
 
-This project is open-sourced under the [MIT License](LICENSE).  
-Feel free to use, modify, and share it.
+Example with JavaScript:
+
+\`\`\`js
+const productUrl = "https://shopee.co.id/example-product";
+
+const response = await fetch(
+  "https://YOUR-DOMAIN/api/generate?url=" + encodeURIComponent(productUrl)
+);
+
+const data = await response.json();
+
+console.log(data.affiliateLink);
+\`\`\`
+
+Example with cURL:
+
+\`\`\`bash
+curl "https://YOUR-DOMAIN/api/generate?url=https%3A%2F%2Fshopee.co.id%2Fexample-product"
+\`\`\`
+
+POST is also supported:
+
+\`\`\`js
+const response = await fetch("https://YOUR-DOMAIN/api/generate", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    url: "https://shopee.co.id/example-product"
+  })
+});
+
+const data = await response.json();
+\`\`\`
+
+### Optional sub_id
+
+Pass a custom \`sub_id\` when needed:
+
+\`\`\`
+GET /api/generate?url=<URL>&sub_id=my-campaign
+\`\`\`
+
+Without a custom value, the API uses \`kuntyy-link-generator\`.
+
+### Response
+
+\`\`\`json
+{
+  "success": true,
+  "affiliateLink": "https://s.shopee.co.id/an_redir?...",
+  "originLink": "https://shopee.co.id/example-product",
+  "affiliateId": "11304530178",
+  "subId": "kuntyy-link-generator"
+}
+\`\`\`
+
+No authentication header, API key, or session cookie is required.
+
+## Link format
+
+The generator follows Shopee's documented affiliate short-link pattern using \`origin_link\`, \`affiliate_id\`, and \`sub_id\`.
+
+Shopee documentation:
+https://help.shopee.co.id/portal/10/article/184879-[Shopee-Affiliate-Program]-Pedoman-Pembuatan-Link-Pendek-Affiliate
+
+## License
+
+This project is open-sourced under the MIT License.
