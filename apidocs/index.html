@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Docs — Shopee Affiliate Link Generator</title>
+  <style>
+    :root {
+      --shopee: #ee4d2d;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --code: #111827;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 28px 20px 56px;
+    }
+    header {
+      margin-bottom: 28px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+    }
+    h2 {
+      margin-top: 34px;
+      font-size: 22px;
+    }
+    h3 {
+      margin-top: 26px;
+      font-size: 18px;
+    }
+    .intro {
+      color: var(--muted);
+      margin: 0;
+    }
+    .back {
+      display: inline-block;
+      margin-bottom: 18px;
+      color: var(--shopee);
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      margin-top: 14px;
+    }
+    .label {
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-bottom: 6px;
+    }
+    .endpoint {
+      font-family: Consolas, Monaco, monospace;
+      font-size: 16px;
+      word-break: break-all;
+    }
+    .method {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 4px 9px;
+      border-radius: 6px;
+      background: #fff1ed;
+      color: var(--shopee);
+      font-weight: bold;
+      font-family: Consolas, Monaco, monospace;
+    }
+    pre {
+      margin: 12px 0 0;
+      padding: 14px;
+      border-radius: 8px;
+      overflow-x: auto;
+      background: var(--code);
+      color: #f9fafb;
+      font-size: 14px;
+    }
+    code {
+      font-family: Consolas, Monaco, monospace;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+    }
+    th, td {
+      padding: 11px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th { background: #f3f4f6; }
+    tr:last-child td { border-bottom: 0; }
+    .required {
+      font-weight: bold;
+    }
+    .note {
+      padding: 14px 16px;
+      margin-top: 14px;
+      border-left: 4px solid var(--shopee);
+      background: #fff7f4;
+      border-radius: 6px;
+    }
+    .step {
+      margin-top: 10px;
+    }
+    .muted {
+      color: var(--muted);
+    }
+    @media (max-width: 640px) {
+      h1 { font-size: 26px; }
+      .endpoint { font-size: 14px; }
+      th, td { padding: 9px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <a class="back" href="/">← Back to Generator</a>
+
+    <header>
+      <h1>Shopee Affiliate Link Generator API</h1>
+      <p class="intro">
+        Use this API to turn a Shopee product link into a Shopee affiliate link.
+        The API is public and does not require an API key or login.
+      </p>
+    </header>
+
+    <section>
+      <h2>1. API Endpoint</h2>
+      <div class="card">
+        <div class="label">Endpoint</div>
+        <div class="endpoint">https://shopee-affiliate-link-generator.netlify.app/api</div>
+        <div class="method">Method: POST</div>
+      </div>
+
+      <div class="note">
+        <strong>Easy way to remember:</strong> send a <code>POST</code> request to the
+        <strong>Endpoint</strong> above, then put your parameters in the request body as JSON.
+      </div>
+    </section>
+
+    <section>
+      <h2>2. Parameters</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Required?</th>
+            <th>Default</th>
+            <th>What it does</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>url</code></td>
+            <td class="required">Yes</td>
+            <td>—</td>
+            <td>Your Shopee product URL or <code>s.shopee.co.id</code> short link.</td>
+          </tr>
+          <tr>
+            <td><code>affiliate_id</code></td>
+            <td>No</td>
+            <td><code>11304530178</code></td>
+            <td>Your Shopee Affiliate ID. Leave it out or send an empty value to use the default.</td>
+          </tr>
+          <tr>
+            <td><code>sub_id</code></td>
+            <td>No</td>
+            <td><code>kuntyy-social</code></td>
+            <td>Optional tracking label so you can identify where a link came from.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>3. Simplest Example</h2>
+      <p class="step">
+        You only need to send <code>url</code>. The API will use the default Affiliate ID
+        and default Sub ID automatically.
+      </p>
+      <pre><code>curl -X POST "https://shopee-affiliate-link-generator.netlify.app/api" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://shopee.co.id/example-product"
+  }'</code></pre>
+    </section>
+
+    <section>
+      <h2>4. Example with Custom Affiliate ID</h2>
+      <pre><code>curl -X POST "https://shopee-affiliate-link-generator.netlify.app/api" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://shopee.co.id/example-product",
+    "affiliate_id": "123456789"
+  }'</code></pre>
+    </section>
+
+    <section>
+      <h2>5. Example with Custom Sub ID</h2>
+      <pre><code>curl -X POST "https://shopee-affiliate-link-generator.netlify.app/api" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://shopee.co.id/example-product",
+    "sub_id": "my-campaign"
+  }'</code></pre>
+    </section>
+
+    <section>
+      <h2>6. JavaScript Example</h2>
+      <pre><code>const response = await fetch(
+  "https://shopee-affiliate-link-generator.netlify.app/api",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      url: "https://shopee.co.id/example-product"
+    })
+  }
+);
+
+const data = await response.json();
+console.log(data.affiliateLink);</code></pre>
+    </section>
+
+    <section>
+      <h2>7. Response</h2>
+      <p>The API returns JSON when the request succeeds:</p>
+      <pre><code>{
+  "success": true,
+  "affiliateLink": "https://s.shopee.co.id/an_redir?...",
+  "originLink": "https://shopee.co.id/example-product",
+  "affiliateId": "11304530178",
+  "subId": "kuntyy-social"
+}</code></pre>
+    </section>
+
+    <section>
+      <h2>8. What happens to the URL?</h2>
+      <div class="card">
+        <p>
+          For a normal Shopee product URL, the API cleans the URL before putting it into
+          <code>origin_link</code>. Query parameters are removed, matching the original
+          generator behavior.
+        </p>
+        <p>
+          For a Shopee short link such as <code>s.shopee.co.id/xxxxx</code>, the API first
+          resolves the short link, then cleans the resulting product URL and generates the affiliate link.
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2>9. Content-Type</h2>
+      <p>
+        The recommended format is JSON:
+        <code>application/json</code>.
+      </p>
+      <p class="muted">
+        For compatibility, the API also accepts
+        <code>application/x-www-form-urlencoded</code>.
+      </p>
+    </section>
+
+    <section>
+      <h2>10. Common Errors</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Error</th>
+            <th>Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>Missing required parameter: url</code></td>
+            <td>You did not send the <code>url</code> parameter.</td>
+          </tr>
+          <tr>
+            <td><code>Invalid URL</code></td>
+            <td>The value you sent is not a valid URL.</td>
+          </tr>
+          <tr>
+            <td><code>Only Shopee Indonesia URLs are supported</code></td>
+            <td>The URL is not a supported Shopee Indonesia address.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>
