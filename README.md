@@ -6,7 +6,7 @@ A lightweight Shopee affiliate link generator with a public API. The default aff
 
 - Generate Shopee affiliate links from full product URLs.
 - Resolve `s.shopee.co.id` short links before generating the affiliate link.
-- Keep the original product URL query parameters intact.
+- Clean the product URL before building the affiliate link by removing query parameters, matching the original implementation.
 - Browser UI for manual use.
 - Public JSON API for scripts, apps, automation, and other code.
 - No API key, login, session, or authentication header required.
