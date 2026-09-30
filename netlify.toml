@@ -1,4 +1,10 @@
 [[redirects]]
+  from = "/api"
+  to = "/.netlify/functions/generate"
+  status = 200
+
+# Keep the previous path working for compatibility.
+[[redirects]]
   from = "/api/generate"
   to = "/.netlify/functions/generate"
   status = 200
